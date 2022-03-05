@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { initGame } from "../redux/slices/gameSlice";
+import { initGame } from "../redux/slices/cardSlice";
 import { useRouter } from "next/router";
 import routes from "../constants/routes";
 

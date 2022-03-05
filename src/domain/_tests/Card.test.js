@@ -1,11 +1,12 @@
-import { CardFaces, CardOwners, CardSuits } from "../../constants/cardValues";
+import { CardFaces, CardSuits } from "../../constants/cardValues";
 import Card from "../Card";
+import { Players } from "../../constants/gameStates";
 
 describe("Card class object behaves correctly", () => {
   describe("isASkip still works", () => {
     it("A Jack should be a skip card", () => {
       // arrange
-      const [face, suit, player] = [CardFaces.J, CardSuits.CLUBS, CardOwners.PLAYER];
+      const [face, suit, player] = [CardFaces.J, CardSuits.CLUBS, Players.HUMAN];
 
       // act
       const card = new Card(face, suit, player);
@@ -15,7 +16,7 @@ describe("Card class object behaves correctly", () => {
     });
     it("A Jack should be a skip card", () => {
       // arrange
-      const [face, suit, player] = [CardFaces[4], CardSuits.CLUBS, CardOwners.PLAYER];
+      const [face, suit, player] = [CardFaces[4], CardSuits.CLUBS, Players.HUMAN];
 
       // act
       const card = new Card(face, suit, player);
@@ -81,7 +82,7 @@ describe("Card class object behaves correctly", () => {
       // act
       card.face = CardFaces.Q;
       // assert
-      expect(card.getFace()).toEqual(initialFace);
+      expect(card.face).toEqual(initialFace);
     });
     it("Should not be able to mutate a card's suit, should result in no change", () => {
       // arrange
@@ -91,7 +92,7 @@ describe("Card class object behaves correctly", () => {
       card.suit = CardSuits.HEARTS;
 
       // assert
-      expect(card.getSuit()).toEqual(initialSuit);
+      expect(card.suit).toEqual(initialSuit);
     });
   });
 });

@@ -1,8 +1,10 @@
-import { combineReducers } from 'redux'
-import gameSlice from "./slices/gameSlice";
+import { combineReducers } from "redux";
+import cardSlice from "./slices/cardSlice";
+import gameStateSlice from "./slices/gameStateSlice";
 
 const reducers = combineReducers({
-    gameSlice,
-})
+  card: cardSlice,
+  gameState: gameStateSlice,
+});
 
 export default reducers;

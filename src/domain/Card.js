@@ -5,14 +5,12 @@ class Card {
     if (!(face && suit)) {
       throw new Error("A card must have a face and suit.");
     }
-    this.face = face;
-    this.suit = suit;
-    this.owner = owner;
-
     // Face and suit are write only due to overriding their sets to avoid mutation. Callback getters used so the
     // values can still be accessed.
     this.getFace = () => face;
     this.getSuit = () => suit;
+
+    this.owner = owner;
   }
 
   get isASkip() {
@@ -36,6 +34,14 @@ class Card {
 
   set suit(s) {
     console.error("Tried setting a card's suit, this can lead to unexpected behavior.");
+  }
+
+  get face() {
+    return this.getFace();
+  }
+
+  get suit() {
+    return this.getSuit();
   }
 
   clearOwner() {
