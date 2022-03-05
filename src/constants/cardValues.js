@@ -21,4 +21,9 @@ export const CardSuits = Object.freeze({
   CLUBS: "Clubs",
 });
 
-export const skipCards = [CardFaces[4], CardFaces.J];
+export const CardOwners = Object.freeze({
+  PLAYER: "PLAYER",
+  ENEMY: "ENEMY",
+});
+
+export const SkipCards = Object.freeze([CardFaces[4], CardFaces.J]);
