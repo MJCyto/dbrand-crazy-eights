@@ -6,7 +6,7 @@ import InvalidCardError from "../../domain/error/InvalidCardError";
 
 describe("Validity helpers tests", () => {
   describe("checkCardValidity still works", () => {
-    it("Card with valid face, suit, no owner needed - shouldn't throw", done => {
+    it("CardElement with valid face, suit, no owner needed - shouldn't throw", done => {
       // arrange
       const card = new Card(CardFaces.K, CardSuits.HEARTS);
 
@@ -19,7 +19,7 @@ describe("Validity helpers tests", () => {
         done.fail("No error should have been thrown - card was valid");
       }
     });
-    it("Card with valid face, suit, owner needed with owner - shouldn't throw", done => {
+    it("CardElement with valid face, suit, owner needed with owner - shouldn't throw", done => {
       // arrange
       const card = new Card(CardFaces.K, CardSuits.HEARTS, Players.HUMAN);
 
@@ -32,7 +32,7 @@ describe("Validity helpers tests", () => {
         done.fail("No error should have been thrown - card was valid");
       }
     });
-    it("Card with valid face, suit, no owner, shouldn't have owner - shouldn't throw", done => {
+    it("CardElement with valid face, suit, no owner, shouldn't have owner - shouldn't throw", done => {
       // arrange
       const card = new Card(CardFaces.K, CardSuits.HEARTS);
 
@@ -45,7 +45,7 @@ describe("Validity helpers tests", () => {
         done.fail("No error should have been thrown - card was valid");
       }
     });
-    it("Card with valid face, suit, no owner, should have owner - should throw", done => {
+    it("CardElement with valid face, suit, no owner, should have owner - should throw", done => {
       // arrange
       const card = new Card(CardFaces.K, CardSuits.HEARTS);
 
@@ -59,7 +59,7 @@ describe("Validity helpers tests", () => {
       }
       done();
     });
-    it("Card with valid face, suit, owner, shouldn't have owner - should throw", done => {
+    it("CardElement with valid face, suit, owner, shouldn't have owner - should throw", done => {
       // arrange
       const card = new Card(CardFaces.K, CardSuits.HEARTS, Players.HUMAN);
 
@@ -73,7 +73,7 @@ describe("Validity helpers tests", () => {
       }
       done();
     });
-    it("Card with invalid face - should throw", done => {
+    it("CardElement with invalid face - should throw", done => {
       // arrange
       const card = new Card("Not a real face", CardSuits.HEARTS);
 
@@ -87,7 +87,7 @@ describe("Validity helpers tests", () => {
       }
       done();
     });
-    it("Card with invalid suit - should throw", done => {
+    it("CardElement with invalid suit - should throw", done => {
       // arrange
       const card = new Card(CardFaces.K, "Invalid suit");
 

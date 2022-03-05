@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { selectHumanHand } from "../../redux/slices/card/selectors";
-import Card from "./Card";
+import CardElement from "./CardElement";
 
 const HumanHand = props => {
   const cards = useSelector(selectHumanHand);
@@ -8,7 +8,7 @@ const HumanHand = props => {
   return (
     <div>
       {cards.map((card, i) => (
-        <Card cardObj={card} key={i} />
+        <CardElement cardObj={card} key={i} />
       ))}
     </div>
   );

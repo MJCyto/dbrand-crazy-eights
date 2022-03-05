@@ -2,7 +2,7 @@ import { CardFaces, CardSuits } from "../../constants/cardValues";
 import Card from "../Card";
 import { Players } from "../../constants/gameStates";
 
-describe("Card class object behaves correctly", () => {
+describe("CardElement class object behaves correctly", () => {
   describe("isASkip still works", () => {
     it("A Jack should be a skip card", () => {
       // arrange

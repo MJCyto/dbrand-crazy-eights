@@ -2,8 +2,8 @@ import cardSlice, { replenishPile } from "../card/cardSlice";
 
 describe.skip("cardSlice action tests", () => {
   describe("playCard works", () => {
-    it("Card of same value is playable", () => {});
-    it("Card of same suit is playable", () => {});
+    it("CardElement of same value is playable", () => {});
+    it("CardElement of same suit is playable", () => {});
     it("Still player's turn when skip is played", () => {});
     it("An 8 should be always playable", () => {});
     it("Should fail when it's not the player's turn", () => {});
