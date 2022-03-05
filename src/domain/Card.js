@@ -5,8 +5,8 @@ class Card {
     if (!(face && suit)) {
       throw new Error("A card must have a face and suit.");
     }
-    this._face = face;
-    this._suit = suit;
+    this.face = face;
+    this.suit = suit;
     // Face and suit are write only due to overriding their sets to avoid mutation. Callback getters used so the
     // values can still be accessed.
 
@@ -14,12 +14,12 @@ class Card {
   }
 
   get isASkip() {
-    return SkipCards.includes(this._face);
+    return SkipCards.includes(this.face);
   }
-
+  //
   checkIfPlayable(cardInPlay) {
-    const thisFace = this._face;
-    const thisSuit = this._suit;
+    const thisFace = this.face;
+    const thisSuit = this.suit;
     return (
       thisFace === CardFaces[8] || thisSuit === cardInPlay.suit || thisFace === cardInPlay.face
     );
@@ -34,20 +34,13 @@ class Card {
   //   console.error("Tried setting a card's suit, this can lead to unexpected behavior.");
   // }
   //
-  get face() {
-    return this._face;
-  }
-
-  get suit() {
-    return this._suit;
-  }
 
   clearOwner() {
     this.owner = undefined;
   }
 
   toJSON() {
-    return { face: this._face, suit: this._suit, owner: this.owner };
+    return { face: this.face, suit: this.suit, owner: this.owner };
   }
 }
 

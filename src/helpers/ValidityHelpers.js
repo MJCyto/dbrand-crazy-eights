@@ -2,6 +2,7 @@ import { CardFaces, CardSuits } from "../constants/cardValues";
 import InvalidCardError from "../domain/error/InvalidCardError";
 import InvalidStateError from "../domain/error/InvalidStateError";
 import { Players } from "../constants/gameStates";
+import { checkIfCardIsPlayable } from "./gamePlayHelpers";
 
 export const checkCardValidity = (card, shouldHaveOwner) => {
   // const face = card.getFace();
@@ -12,6 +13,7 @@ export const checkCardValidity = (card, shouldHaveOwner) => {
     throw new InvalidCardError(`Card has an invalid face value, got ${face}`);
   }
   if (!Object.values(CardSuits).includes(suit)) {
+    console.log(Object.values(CardSuits));
     throw new InvalidCardError(`Card has an invalid suit, got ${suit}`);
   }
   if (!!shouldHaveOwner !== !!owner) {
@@ -26,7 +28,7 @@ export const checkIfCardBePlayed = (card, humanHand, robotHand, cardInPlay, whos
     throw new InvalidStateError("It isn't your turn!");
   }
 
-  if (!card.checkIfPlayable(cardInPlay)) {
+  if (!checkIfCardIsPlayable(card, cardInPlay)) {
     throw new InvalidStateError(
       `${card.face} of ${card.suit} cannot be played on a ${cardInPlay.face} of ${cardInPlay.suit}`
     );

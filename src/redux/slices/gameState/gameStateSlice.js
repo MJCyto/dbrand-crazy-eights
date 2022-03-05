@@ -11,7 +11,7 @@ import {
   selectPile,
   selectRobotHand,
 } from "../card/selectors";
-import { getSubsequentCardsOnTop } from "../../../helpers/gamePlayHelpers";
+import { getSubsequentCardsOnTop, isCardASkip } from "../../../helpers/gamePlayHelpers";
 import { makeEnemyPickUp, pushCard, replenishPile } from "../card/cardSlice";
 
 // TODO: mocked store test
@@ -27,7 +27,6 @@ export const playCard = card => (dispatch, getState) => {
   // Will throw an error if conditions to play card are not met
   checkIfCardBePlayed(card, humanHand, robotHand, cardInPlay, whosTurn);
 
-  delete card.owner;
   dispatch(pushCard(card));
 
   let cardsToPickUp;
@@ -51,7 +50,7 @@ export const playCard = card => (dispatch, getState) => {
   }
 
   // If the card is a skip, whosTurn should stay the same
-  if (!card.isASkip()) {
+  if (!isCardASkip(card)) {
     dispatch(setWhosTurn(whosTurn === Players.HUMAN ? Players.ROBOT : Players.HUMAN));
   }
 };
@@ -85,10 +84,15 @@ const gameStateSlice = createSlice({
     playHumanCard: (state, action) => {},
     // Should only be called after playCard
     playRobotCard: (state, action) => {},
+    initGameState: (state, action) => {
+      state.whosTurn = Players.HUMAN;
+      state.gameState = GameStates.IN_GAME;
+      state.winner = initialState.winner;
+    },
   },
   extraReducers: builder => {},
 });
 
-export const { setWhosTurn, playHumanCard, playRobotCard } = gameStateSlice.actions;
+export const { setWhosTurn, playHumanCard, playRobotCard, initGameState } = gameStateSlice.actions;
 
 export default gameStateSlice.reducer;

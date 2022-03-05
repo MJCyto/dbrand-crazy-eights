@@ -6,6 +6,39 @@ import InvalidInputError from "../../../domain/error/InvalidInputError";
 import InvalidStateError from "../../../domain/error/InvalidStateError";
 import { Players } from "../../../constants/gameStates";
 import { checkCardValidity } from "../../../helpers/ValidityHelpers";
+import { initGameState } from "../gameState/gameStateSlice";
+
+export const initGame = numCards => (dispatch, getState) => {
+  if (isNaN(numCards)) {
+    throw new InvalidInputError("We asked for the NUMBER of cards.");
+  }
+  let allCards = [];
+  // Make all cards given there is a card for every combination of suit X face.
+  Object.values(CardSuits).forEach(suit => {
+    Object.values(CardFaces).forEach(face => {
+      allCards.push(new Card(face, suit));
+    });
+  });
+
+  // Randomize the cards before divvying up
+  allCards = shuffle(allCards);
+
+  const cardState = {
+    humanHand: allCards.splice(0, numCards).map(card => {
+      card.owner = Players.HUMAN;
+      return card;
+    }),
+    robotHand: allCards.splice(0, numCards).map(card => {
+      card.owner = Players.ROBOT;
+      return card;
+    }),
+    playedCards: [allCards.pop()],
+    deckCards: allCards,
+  };
+
+  dispatch(initCards(cardState));
+  dispatch(initGameState());
+};
 
 const initialState = Object.freeze({
   humanHand: [],
@@ -18,33 +51,13 @@ const cardSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    initGame: (state, action) => {
-      const numCards = action.payload;
+    initCards: (state, action) => {
+      const { humanHand, robotHand, deckCards, playedCards } = action.payload;
 
-      if (isNaN(numCards)) {
-        throw new InvalidInputError("We asked for the NUMBER of cards.");
-      }
-      let allCards = [];
-      // Make all cards given there is a card for every combination of suit X face.
-      Object.keys(CardSuits).forEach(suit => {
-        Object.values(CardFaces).forEach(face => {
-          allCards.push(new Card(face, suit));
-        });
-      });
-
-      // Randomize the cards before divvying up
-      allCards = shuffle(allCards);
-
-      state.humanHand = allCards.splice(0, numCards).map(card => {
-        card.owner = Players.HUMAN;
-        return card;
-      });
-      state.robotHand = allCards.splice(0, numCards).map(card => {
-        card.owner = Players.ROBOT;
-        return card;
-      });
-      state.playedCards = [allCards.pop()];
-      state.deckCards = allCards;
+      state.humanHand = humanHand;
+      state.robotHand = robotHand;
+      state.deckCards = deckCards;
+      state.playedCards = playedCards;
     },
     replenishPile: state => {
       if (state.playedCards <= 1) {
@@ -56,8 +69,19 @@ const cardSlice = createSlice({
     },
     // For the enemies moves, since we're using context for the enemy cards
     pushCard: (state, action) => {
-      checkCardValidity(action.payload, false);
-      state.playedCards.push(action.payload);
+      const card = action.payload;
+      checkCardValidity(card, true);
+
+      const filterCards = hand => {
+        return hand.filter(
+          handCard => !(handCard.suit === card.suit && handCard.face === card.face)
+        );
+      };
+
+      card.owner === Players.HUMAN
+        ? (state.humanHand = filterCards(state.humanHand))
+        : (state.robotHand = filterCards(state.robotHand));
+      state.playedCards.push(card);
     },
     makeEnemyPickUp: (state, action) => {
       if (isNaN(action.payload)) {
@@ -99,6 +123,6 @@ const cardSlice = createSlice({
   extraReducers: builder => {},
 });
 
-export const { initGame, pushCard, replenishPile, makeEnemyPickUp } = cardSlice.actions;
+export const { initCards, pushCard, replenishPile, makeEnemyPickUp } = cardSlice.actions;
 
 export default cardSlice.reducer;
