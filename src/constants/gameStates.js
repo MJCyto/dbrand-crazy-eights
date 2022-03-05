@@ -5,6 +5,6 @@ export const GameStates = Object.freeze({
 });
 
 export const Players = Object.freeze({
-  HUMAN: "HUMAN",
-  ROBOT: "ROBOT",
+  HUMAN: "human",
+  ROBOT: "robot",
 });

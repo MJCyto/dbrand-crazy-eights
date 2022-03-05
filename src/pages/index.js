@@ -11,10 +11,6 @@ const Home = () => {
   const router = useRouter();
 
   const beginGame = () => {
-    // dispatch(initGame(numCards))
-    //   .then(() => router.push(routes.gameRoute))
-    //   .catch(setInputValidationError);
-
     try {
       dispatch(initGame(numCards));
       router.push(routes.gameRoute);
