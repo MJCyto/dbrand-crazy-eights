@@ -71,28 +71,4 @@ describe("Card class object behaves correctly", () => {
       expect(isPlayable).toBeFalsy();
     });
   });
-  describe("Setter tests", () => {
-    const initialFace = CardFaces.K;
-    const initialSuit = CardSuits.CLUBS;
-    // beforeAll(() => {card = new Card(CardFaces.K, CardSuits.CLUBS)});
-    it("Should not be able to mutate a card's face value, should result in no change", () => {
-      // arrange
-      const card = new Card(initialFace, initialSuit);
-
-      // act
-      card.face = CardFaces.Q;
-      // assert
-      expect(card.face).toEqual(initialFace);
-    });
-    it("Should not be able to mutate a card's suit, should result in no change", () => {
-      // arrange
-      const card = new Card(initialFace, initialSuit);
-
-      // act
-      card.suit = CardSuits.HEARTS;
-
-      // assert
-      expect(card.suit).toEqual(initialSuit);
-    });
-  });
 });

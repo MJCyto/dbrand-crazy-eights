@@ -35,8 +35,15 @@ const cardSlice = createSlice({
       // Randomize the cards before divvying up
       allCards = shuffle(allCards);
 
-      state.playerCards = allCards.splice(0, numCards);
-      state.enemyCards = allCards.splice(0, numCards);
+      state.humanHand = allCards.splice(0, numCards).map(card => {
+        card.owner = Players.HUMAN;
+        return card;
+      });
+      state.robotHand = allCards.splice(0, numCards).map(card => {
+        card.owner = Players.ROBOT;
+        return card;
+      });
+      state.playedCards = [allCards.pop()];
       state.deckCards = allCards;
     },
     replenishPile: state => {

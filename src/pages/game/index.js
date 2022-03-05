@@ -1,5 +1,11 @@
-const GameScreen = () => {
-    return <div>GAME!</div>
-}
+import HumanHand from "./HumanHand";
 
-export default GameScreen
+const GameScreen = () => {
+  return (
+    <div>
+      <HumanHand />
+    </div>
+  );
+};
+
+export default GameScreen;

@@ -13,3 +13,5 @@ export const getSubsequentCardsOnTop = (pile, faceToLookFor) => {
 
   return subsequentCards;
 };
+
+const checkIfCardPlayable = (cardToPick, cardInPlay) => {};
