@@ -5,11 +5,9 @@ import { debounce } from "lodash";
 import { saveState } from "../redux/browserStorage";
 import { store } from "../redux/store";
 import { useEffect, useState } from "react";
+import "../public/fonts/style.css";
 
-// here we subscribe to the store changes
 store.subscribe(
-  // we use debounce to save the state once each 800ms
-  // for better performances in case multiple changes occur in a short time
   debounce(() => {
     saveState(store.getState());
   }, 800)
@@ -23,9 +21,11 @@ function MyApp({ Component, pageProps, reduxStore }) {
     }
   }, []);
   return (
-    <Provider store={storeToUse}>
-      <Component {...pageProps} />
-    </Provider>
+    <>
+      <Provider store={storeToUse}>
+        <Component {...pageProps} />
+      </Provider>
+    </>
   );
 }
 

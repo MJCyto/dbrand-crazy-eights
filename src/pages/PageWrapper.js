@@ -1,8 +1,4 @@
-const TitleBar = () => {
-  return (
-    <div style={{ backgroundColor: "red", height: 30, width: "100%" }}>DBrand Crazy Eights</div>
-  );
-};
+import TitleBar from "./TitleBar";
 
 const PageWrapper = ({ children }) => {
   return (

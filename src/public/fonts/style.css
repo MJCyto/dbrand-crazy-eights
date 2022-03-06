@@ -1,0 +1,8 @@
+
+@font-face {
+    font-family: 'DBrandBase';
+    src: url('DBrandBase.woff2');
+    src: url('DBrandBase.woff2?#iefix') format('embedded-opentype'), url('DBrandBase.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+}
