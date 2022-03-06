@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { initGame } from "../redux/slices/card/cardSlice";
 import { useRouter } from "next/router";
 import routes from "../constants/routes";
+import { initGame } from "../redux/slices/gameState/gameStateSlice";
 
 const Home = () => {
   const [numCards, setNumCards] = useState();

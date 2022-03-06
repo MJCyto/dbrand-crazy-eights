@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CardFaces, CardSuits } from "../../../constants/cardValues";
 import { GameStates, Players } from "../../../constants/gameStates";
 import { validateCardPlayability } from "../../../helpers/ValidityHelpers";
-import { selectWhosTurn } from "./selectors";
+import { selectStartingCards, selectWhosTurn } from "./selectors";
 import InvalidStateError from "../../../domain/error/InvalidStateError";
 import {
   selectCardInPlay,
@@ -16,8 +16,16 @@ import {
   getSubsequentCardsOnTop,
   isCardASkip,
 } from "../../../helpers/gamePlayHelpers";
-import { makeEnemyPickUp, pickUpCard, pushCard, replenishPile } from "../card/cardSlice";
-import { cloneDeep } from "lodash";
+import {
+  initCards,
+  makeEnemyPickUp,
+  pickUpCard,
+  pushCard,
+  replenishPile,
+  resetCardSlice,
+} from "../card/cardSlice";
+import { cloneDeep, shuffle } from "lodash";
+import InvalidInputError from "../../../domain/error/InvalidInputError";
 
 export const playCard = card => (dispatch, getState) => {
   const state = getState();
@@ -78,6 +86,56 @@ export const playCard = card => (dispatch, getState) => {
   }
 };
 
+export const initGame = numCards => dispatch => {
+  if (isNaN(numCards)) {
+    throw new InvalidInputError("We asked for the NUMBER of cards.");
+  }
+  // For subsequent games - we need to know how many cards to begin with
+  dispatch(setStartingCards(numCards));
+
+  let allCards = [];
+  // Make all cards given there is a card for every combination of suit X face.
+  Object.values(CardSuits).forEach(suit => {
+    Object.values(CardFaces).forEach(face => {
+      allCards.push({ face, suit });
+    });
+  });
+
+  // Randomize the cards before divvying up
+  allCards = shuffle(allCards);
+
+  const cardState = {
+    humanHand: allCards.splice(0, numCards).map(card => {
+      card.owner = Players.HUMAN;
+      return card;
+    }),
+    robotHand: allCards.splice(0, numCards).map(card => {
+      card.owner = Players.ROBOT;
+      return card;
+    }),
+    playedCards: [allCards.pop()],
+    deckCards: allCards,
+  };
+
+  dispatch(initCards(cardState));
+  dispatch(initGameState());
+};
+
+// Clear state and
+export const restartGame = () => (dispatch, getState) => {
+  const state = getState();
+  const numOfBeginningCards = selectStartingCards(state);
+  console.log(numOfBeginningCards);
+  dispatch(resetCardSlice());
+  dispatch(initGame(selectStartingCards(state)));
+};
+
+// For quitting the game, should reset everything to initial state
+export const clearGame = () => dispatch => {
+  dispatch(resetCardSlice());
+  dispatch(resetGameSlice());
+};
+
 export const doRobotTurn = createAsyncThunk(
   `gameState/robotTurn`,
   async (data, { getState, dispatch }) => {
@@ -124,6 +182,7 @@ const initialState = Object.freeze({
   gameState: GameStates.LOBBY,
   whosTurn: Players.HUMAN,
   winner: null,
+  startingCards: 8,
 });
 
 const gameStateSlice = createSlice({
@@ -148,9 +207,14 @@ const gameStateSlice = createSlice({
     setWinner: (state, action) => {
       state.winner = action.payload;
     },
+    setStartingCards: (state, action) => {
+      state.startingCards = action.payload;
+    },
+    resetGameSlice: () => initialState,
   },
 });
 
-export const { setWhosTurn, initGameState, setWinner } = gameStateSlice.actions;
+export const { setWhosTurn, initGameState, setWinner, setStartingCards, resetGameSlice } =
+  gameStateSlice.actions;
 
 export default gameStateSlice.reducer;

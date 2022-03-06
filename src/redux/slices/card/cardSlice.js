@@ -1,43 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CardFaces, CardSuits } from "../../../constants/cardValues";
 import { cloneDeep, shuffle } from "lodash";
-import InvalidInputError from "../../../domain/error/InvalidInputError";
 import InvalidStateError from "../../../domain/error/InvalidStateError";
 import { Players } from "../../../constants/gameStates";
 import { checkCardValidity } from "../../../helpers/ValidityHelpers";
-import { initGameState } from "../gameState/gameStateSlice";
-
-export const initGame = numCards => dispatch => {
-  if (isNaN(numCards)) {
-    throw new InvalidInputError("We asked for the NUMBER of cards.");
-  }
-  let allCards = [];
-  // Make all cards given there is a card for every combination of suit X face.
-  Object.values(CardSuits).forEach(suit => {
-    Object.values(CardFaces).forEach(face => {
-      allCards.push({ face, suit });
-    });
-  });
-
-  // Randomize the cards before divvying up
-  allCards = shuffle(allCards);
-
-  const cardState = {
-    humanHand: allCards.splice(0, numCards).map(card => {
-      card.owner = Players.HUMAN;
-      return card;
-    }),
-    robotHand: allCards.splice(0, numCards).map(card => {
-      card.owner = Players.ROBOT;
-      return card;
-    }),
-    playedCards: [allCards.pop()],
-    deckCards: allCards,
-  };
-
-  dispatch(initCards(cardState));
-  dispatch(initGameState());
-};
 
 const initialState = Object.freeze({
   humanHand: [],
@@ -142,10 +107,11 @@ const cardSlice = createSlice({
       newCard.owner = cardReceiver;
       receivingHand.push(newCard);
     },
+    resetCardSlice: () => initialState,
   },
 });
 
-export const { initCards, pushCard, replenishPile, makeEnemyPickUp, pickUpCard } =
+export const { initCards, pushCard, replenishPile, makeEnemyPickUp, pickUpCard, resetCardSlice } =
   cardSlice.actions;
 
 export default cardSlice.reducer;
