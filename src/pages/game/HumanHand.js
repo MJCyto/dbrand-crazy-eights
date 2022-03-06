@@ -3,6 +3,8 @@ import { selectHumanHand } from "../../redux/slices/card/selectors";
 import CardElement from "./CardElement";
 import { Alert } from "@mui/material";
 import { useRef, useState } from "react";
+import { CardFaces, CardSuits } from "../../constants/cardValues";
+import { Players } from "../../constants/gameStates";
 
 const HumanHand = props => {
   const cards = useSelector(selectHumanHand);

@@ -1,5 +1,4 @@
 import { CardFaces, CardSuits } from "../../constants/cardValues";
-import Card from "../../domain/Card";
 import { checkCardValidity } from "../ValidityHelpers";
 import { Players } from "../../constants/gameStates";
 import InvalidCardError from "../../domain/error/InvalidCardError";
@@ -8,7 +7,7 @@ describe("Validity helpers tests", () => {
   describe("checkCardValidity still works", () => {
     it("CardElement with valid face, suit, no owner needed - shouldn't throw", done => {
       // arrange
-      const card = new Card(CardFaces.K, CardSuits.HEARTS);
+      const card = { face: CardFaces.K, suit: CardSuits.HEARTS };
 
       // act
       try {
@@ -21,7 +20,7 @@ describe("Validity helpers tests", () => {
     });
     it("CardElement with valid face, suit, owner needed with owner - shouldn't throw", done => {
       // arrange
-      const card = new Card(CardFaces.K, CardSuits.HEARTS, Players.HUMAN);
+      const card = { face: CardFaces.K, suit: CardSuits.HEARTS, owner: Players.HUMAN };
 
       // act
       try {
@@ -34,7 +33,7 @@ describe("Validity helpers tests", () => {
     });
     it("CardElement with valid face, suit, no owner, shouldn't have owner - shouldn't throw", done => {
       // arrange
-      const card = new Card(CardFaces.K, CardSuits.HEARTS);
+      const card = { face: CardFaces.K, suit: CardSuits.HEARTS };
 
       // act
       try {
@@ -47,7 +46,7 @@ describe("Validity helpers tests", () => {
     });
     it("CardElement with valid face, suit, no owner, should have owner - should throw", done => {
       // arrange
-      const card = new Card(CardFaces.K, CardSuits.HEARTS);
+      const card = { face: CardFaces.K, suit: CardSuits.HEARTS };
 
       // act
       try {
@@ -61,7 +60,7 @@ describe("Validity helpers tests", () => {
     });
     it("CardElement with valid face, suit, owner, shouldn't have owner - should throw", done => {
       // arrange
-      const card = new Card(CardFaces.K, CardSuits.HEARTS, Players.HUMAN);
+      const card = { face: CardFaces.K, suit: CardSuits.HEARTS, owner: Players.HUMAN };
 
       // act
       try {
@@ -75,7 +74,7 @@ describe("Validity helpers tests", () => {
     });
     it("CardElement with invalid face - should throw", done => {
       // arrange
-      const card = new Card("Not a real face", CardSuits.HEARTS);
+      const card = { face: "Not a real face", suit: CardSuits.HEARTS };
 
       // act
       try {
@@ -89,7 +88,7 @@ describe("Validity helpers tests", () => {
     });
     it("CardElement with invalid suit - should throw", done => {
       // arrange
-      const card = new Card(CardFaces.K, "Invalid suit");
+      const card = { face: CardFaces.K, suit: "Invalid suit" };
 
       // act
       try {

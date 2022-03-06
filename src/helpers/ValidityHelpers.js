@@ -21,7 +21,7 @@ export const checkCardValidity = (card, shouldHaveOwner) => {
   }
 };
 
-export const checkIfCardBePlayed = (card, humanHand, robotHand, cardInPlay, whosTurn) => {
+export const validateCardPlayability = (card, humanHand, robotHand, cardInPlay, whosTurn) => {
   checkCardValidity(card, true); // Avoids bad behavior. Played cards should have a face value, suit and an owner
 
   if (whosTurn !== card.owner) {
@@ -40,9 +40,9 @@ export const checkIfCardBePlayed = (card, humanHand, robotHand, cardInPlay, whos
     handCard => JSON.stringify(handCard) === JSON.stringify(card)
   );
 
-  if (!foundCard) {
-    throw new InvalidStateError(
-      `Tried playing the ${card.face} of ${card.suit} but that isn't in your hand.`
-    );
-  }
+  // if (!foundCard) {
+  //   throw new InvalidStateError(
+  //     `Tried playing the ${card.face} of ${card.suit} but that isn't in your hand.`
+  //   );
+  // }
 };

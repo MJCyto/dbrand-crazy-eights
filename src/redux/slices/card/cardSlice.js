@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { CardFaces, CardSuits } from "../../../constants/cardValues";
-import Card from "../../../domain/Card";
 import { cloneDeep, shuffle } from "lodash";
 import InvalidInputError from "../../../domain/error/InvalidInputError";
 import InvalidStateError from "../../../domain/error/InvalidStateError";
@@ -16,7 +15,7 @@ export const initGame = numCards => (dispatch, getState) => {
   // Make all cards given there is a card for every combination of suit X face.
   Object.values(CardSuits).forEach(suit => {
     Object.values(CardFaces).forEach(face => {
-      allCards.push(new Card(face, suit));
+      allCards.push({ face, suit });
     });
   });
 
@@ -83,46 +82,68 @@ const cardSlice = createSlice({
         : (state.robotHand = filterCards(state.robotHand));
       state.playedCards.push(card);
     },
-    makeEnemyPickUp: (state, action) => {
-      if (isNaN(action.payload)) {
-        throw new InvalidStateError(
-          `Value for cards to pick needs to be a number, got ${action.payload}`
-        );
-      }
-      if (state.deckCards.length === 0) {
-        throw new InvalidStateError("There aren't any cards to pick up.");
-      }
+    makeEnemyPickUp: {
+      reducer: (state, action) => {
+        // debugger;
+        console.log("88");
+        const { cardsToPickUp, playerToPickUp } = action.payload;
+        if (isNaN(cardsToPickUp)) {
+          throw new InvalidStateError(
+            `Value for cards to pick needs to be a number, got ${cardsToPickUp}`
+          );
+        }
+        if (state.deckCards.length === 0) {
+          throw new InvalidStateError("There aren't any cards to pick up.");
+        }
 
-      const playerPickingUp = state.whosTurn === Players.HUMAN ? Players.ROBOT : Players.HUMAN;
-
-      const getCardsToGive = () => {
         let cardsToGive = [];
         if (state.deckCards.length <= action.payload) {
           cardsToGive = cloneDeep(state.deckCards);
           state.deckCards = [];
         } else {
           cardsToGive = state.deckCards.splice(
-            state.playedCards.length - (action.payload + 1),
-            action.payload
+            state.deckCards.length - 1 - cardsToPickUp,
+            cardsToPickUp
           );
         }
-        cardsToGive.forEach(card => (card.owner = playerPickingUp));
-        return cardsToGive;
-      };
-      switch (state.whosTurn) {
-        case Players.HUMAN: {
-          state.humanHand = [...state.humanHand, ...getCardsToGive()];
-          break;
+        cardsToGive.forEach(card => (card.owner = playerToPickUp));
+
+        switch (playerToPickUp) {
+          case Players.HUMAN: {
+            state.humanHand = [...state.humanHand, ...cardsToGive];
+            break;
+          }
+          case Players.ROBOT: {
+            state.robotHand = [...state.robotHand, ...cardsToGive];
+          }
         }
-        case Players.ROBOT: {
-          state.robotHand = [...state.robotHand, ...getCardsToGive()];
-        }
+      },
+      prepare: (cardsToPickUp, playerToPickUp) => {
+        // console.log(prepare);
+        return { payload: { cardsToPickUp, playerToPickUp } };
+      },
+    },
+    pickUpCard: (state, action) => {
+      const cardReceiver = action.payload;
+
+      console.log(cardReceiver);
+      console.log(state.whosTurn);
+      if (state.whosTurn !== cardReceiver) {
+        throw new Error("It isn't your turn.");
       }
+      if (state.deckCards < 1) {
+        throw new InvalidStateError("There aren't any cards to pick up!");
+      }
+
+      const receivingHand = cardReceiver === Players.HUMAN ? state.humanHand : state.robotHand;
+
+      receivingHand.push({ ...state.deckCards.pop(), owner: cardReceiver });
     },
   },
   extraReducers: builder => {},
 });
 
-export const { initCards, pushCard, replenishPile, makeEnemyPickUp } = cardSlice.actions;
+export const { initCards, pushCard, replenishPile, makeEnemyPickUp, pickUpCard } =
+  cardSlice.actions;
 
 export default cardSlice.reducer;
