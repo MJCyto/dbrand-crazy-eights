@@ -1,24 +1,38 @@
 import HumanHand from "./HumanHand";
 import Pile from "./Pile";
 import { useDispatch, useSelector } from "react-redux";
-import { selectWhosTurn, selectWinner } from "../../redux/slices/gameState/selectors";
+import {
+  selectGameState,
+  selectWhosTurn,
+  selectWinner,
+} from "../../redux/slices/gameState/selectors";
 import PageWrapper from "../PageWrapper";
 import RobotHand from "./RobotHand";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Alert } from "@mui/material";
 import ErrorContext from "../../domain/context/errorContext";
 import SomeoneWonModal from "../../modals/SomeoneWonModal";
 import { clearGame, restartGame } from "../../redux/slices/gameState/gameStateSlice";
 import { useRouter } from "next/router";
+import { GameStates } from "../../constants/gameStates";
+import routes from "../../constants/routes";
 
 const GameScreen = () => {
   const router = useRouter();
   const whosTurn = useSelector(selectWhosTurn);
   const winner = useSelector(selectWinner);
+  const gameState = useSelector(selectGameState);
   const errorTimeout = useRef();
   const [gameplayError, setGameplayError] = useState();
 
   const dispatch = useDispatch();
+
+  // If a game isn't set up but the user went to /game, we should redirect to let them set a game up.
+  useLayoutEffect(() => {
+    if (gameState === GameStates.LOBBY) {
+      router.replace(routes.homeRoute);
+    }
+  }, []);
 
   // Have the error on screen for 5 seconds
   const onError = e => {

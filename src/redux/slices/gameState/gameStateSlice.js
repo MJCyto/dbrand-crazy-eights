@@ -206,6 +206,7 @@ const gameStateSlice = createSlice({
     },
     setWinner: (state, action) => {
       state.winner = action.payload;
+      state.gameState = GameStates.GAME_OVER;
     },
     setStartingCards: (state, action) => {
       state.startingCards = action.payload;
