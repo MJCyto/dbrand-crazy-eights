@@ -19,7 +19,6 @@ import {
 import { makeEnemyPickUp, pickUpCard, pushCard, replenishPile } from "../card/cardSlice";
 import { cloneDeep } from "lodash";
 
-// TODO: mocked store test
 export const playCard = card => (dispatch, getState) => {
   // debugger;
   const state = getState();
@@ -29,8 +28,6 @@ export const playCard = card => (dispatch, getState) => {
   const cardInPlay = selectCardInPlay(state);
   const humanHand = selectHumanHand(state);
   const robotHand = selectRobotHand(state);
-
-  console.log(`${card.owner} playing the ${card.face} of ${card.suit}`);
 
   // Will throw an error if conditions to play card are not met
   validateCardPlayability(card, humanHand, robotHand, cardInPlay, whosTurn);
@@ -68,10 +65,16 @@ export const playCard = card => (dispatch, getState) => {
 
   // If the card is a skip, whosTurn should stay the same
   if (!isCardASkip(card)) {
-    dispatch(setWhosTurn(whosTurn === Players.HUMAN ? Players.ROBOT : Players.HUMAN));
+    // Checks if 1 since we're still using the state from the beginning of the dispatch
+    if (
+      (whosTurn === Players.HUMAN && humanHand.length <= 1) ||
+      (whosTurn === Players.ROBOT && robotHand.length <= 1)
+    ) {
+      dispatch(setWinner(whosTurn));
+    } else {
+      dispatch(setWhosTurn(whosTurn === Players.HUMAN ? Players.ROBOT : Players.HUMAN));
+    }
   }
-
-  console.log("success!");
 };
 
 export const doRobotTurn = createAsyncThunk(
@@ -136,19 +139,18 @@ const gameStateSlice = createSlice({
       }
       state.whosTurn = whosTurn;
     },
-    // Should only be called after playCard
-    playHumanCard: (state, action) => {},
-    // Should only be called after playCard
-    playRobotCard: (state, action) => {},
     initGameState: (state, action) => {
       state.whosTurn = Players.HUMAN;
       state.gameState = GameStates.IN_GAME;
       state.winner = initialState.winner;
     },
+    setWinner: (state, action) => {
+      state.winner = action.payload;
+    },
   },
   extraReducers: builder => {},
 });
 
-export const { setWhosTurn, playHumanCard, playRobotCard, initGameState } = gameStateSlice.actions;
+export const { setWhosTurn, initGameState, setWinner } = gameStateSlice.actions;
 
 export default gameStateSlice.reducer;

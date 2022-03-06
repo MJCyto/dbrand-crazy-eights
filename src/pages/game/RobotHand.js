@@ -5,7 +5,7 @@ import { Players } from "../../constants/gameStates";
 import { selectRobotHand } from "../../redux/slices/card/selectors";
 import { doRobotTurn } from "../../redux/slices/gameState/gameStateSlice";
 
-const RobotHand = props => {
+const RobotHand = () => {
   const whosTurn = useSelector(selectWhosTurn);
   const cards = useSelector(selectRobotHand);
   const dispatch = useDispatch();

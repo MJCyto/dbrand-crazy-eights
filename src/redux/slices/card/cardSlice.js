@@ -125,19 +125,15 @@ const cardSlice = createSlice({
     },
     pickUpCard: (state, action) => {
       const cardReceiver = action.payload;
-
-      console.log(cardReceiver);
-      console.log(state.whosTurn);
-      if (state.whosTurn !== cardReceiver) {
-        throw new Error("It isn't your turn.");
-      }
       if (state.deckCards < 1) {
         throw new InvalidStateError("There aren't any cards to pick up!");
       }
 
       const receivingHand = cardReceiver === Players.HUMAN ? state.humanHand : state.robotHand;
 
-      receivingHand.push({ ...state.deckCards.pop(), owner: cardReceiver });
+      const newCard = state.deckCards.pop();
+      newCard.owner = cardReceiver;
+      receivingHand.push(newCard);
     },
   },
   extraReducers: builder => {},
