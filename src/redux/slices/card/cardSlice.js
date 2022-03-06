@@ -7,7 +7,7 @@ import { Players } from "../../../constants/gameStates";
 import { checkCardValidity } from "../../../helpers/ValidityHelpers";
 import { initGameState } from "../gameState/gameStateSlice";
 
-export const initGame = numCards => (dispatch, getState) => {
+export const initGame = numCards => dispatch => {
   if (isNaN(numCards)) {
     throw new InvalidInputError("We asked for the NUMBER of cards.");
   }
@@ -64,7 +64,11 @@ const cardSlice = createSlice({
       }
 
       let cardsToMove = state.playedCards.splice(0, state.playedCards.length - 1);
-      state.deckCards = [...shuffle(cardsToMove), ...state.deckCards];
+      cardsToMove = shuffle(cardsToMove).map(card => {
+        // An 8 is in the pile, change it back to its original suit.
+        return { suit: card.originalSuit || card.suit, face: card.face };
+      });
+      state.deckCards = [...cardsToMove, ...state.deckCards];
     },
     // For the enemies moves, since we're using context for the enemy cards
     pushCard: (state, action) => {
@@ -73,7 +77,9 @@ const cardSlice = createSlice({
 
       const filterCards = hand => {
         return hand.filter(
-          handCard => !(handCard.suit === card.suit && handCard.face === card.face)
+          // Also checks for "originalSuit" since 8 cards have their suit replaced once played.
+          handCard =>
+            !(handCard.suit === (card.originalSuit || card.suit) && handCard.face === card.face)
         );
       };
 
@@ -84,19 +90,20 @@ const cardSlice = createSlice({
     },
     makeEnemyPickUp: {
       reducer: (state, action) => {
-        // debugger;
-        console.log("88");
         const { cardsToPickUp, playerToPickUp } = action.payload;
+
+        // Obviously, should only be a number.
         if (isNaN(cardsToPickUp)) {
           throw new InvalidStateError(
             `Value for cards to pick needs to be a number, got ${cardsToPickUp}`
           );
         }
+        // Deck should be replenished if needed before calling this action.
         if (state.deckCards.length === 0) {
           throw new InvalidStateError("There aren't any cards to pick up.");
         }
 
-        let cardsToGive = [];
+        let cardsToGive;
         if (state.deckCards.length <= action.payload) {
           cardsToGive = cloneDeep(state.deckCards);
           state.deckCards = [];
@@ -108,6 +115,7 @@ const cardSlice = createSlice({
         }
         cardsToGive.forEach(card => (card.owner = playerToPickUp));
 
+        // Spread into the appropriate hand
         switch (playerToPickUp) {
           case Players.HUMAN: {
             state.humanHand = [...state.humanHand, ...cardsToGive];
@@ -119,7 +127,6 @@ const cardSlice = createSlice({
         }
       },
       prepare: (cardsToPickUp, playerToPickUp) => {
-        // console.log(prepare);
         return { payload: { cardsToPickUp, playerToPickUp } };
       },
     },
@@ -136,7 +143,6 @@ const cardSlice = createSlice({
       receivingHand.push(newCard);
     },
   },
-  extraReducers: builder => {},
 });
 
 export const { initCards, pushCard, replenishPile, makeEnemyPickUp, pickUpCard } =

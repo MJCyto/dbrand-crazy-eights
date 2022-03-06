@@ -20,7 +20,6 @@ import { makeEnemyPickUp, pickUpCard, pushCard, replenishPile } from "../card/ca
 import { cloneDeep } from "lodash";
 
 export const playCard = card => (dispatch, getState) => {
-  // debugger;
   const state = getState();
   const whosTurn = selectWhosTurn(state);
   const pile = selectPile(state);
@@ -32,7 +31,9 @@ export const playCard = card => (dispatch, getState) => {
   // Will throw an error if conditions to play card are not met
   validateCardPlayability(card, humanHand, robotHand, cardInPlay, whosTurn);
 
+  // Holds how many cards the opponent will pick up due to this card
   let cardsToPickUp;
+
   // Queen of Spades makes enemy pick up 5.
   if (card.face === CardFaces.Q && card.suit === CardSuits.SPADES) {
     cardsToPickUp = 5;
@@ -139,7 +140,7 @@ const gameStateSlice = createSlice({
       }
       state.whosTurn = whosTurn;
     },
-    initGameState: (state, action) => {
+    initGameState: state => {
       state.whosTurn = Players.HUMAN;
       state.gameState = GameStates.IN_GAME;
       state.winner = initialState.winner;
@@ -148,7 +149,6 @@ const gameStateSlice = createSlice({
       state.winner = action.payload;
     },
   },
-  extraReducers: builder => {},
 });
 
 export const { setWhosTurn, initGameState, setWinner } = gameStateSlice.actions;

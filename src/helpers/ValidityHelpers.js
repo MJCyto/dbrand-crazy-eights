@@ -3,6 +3,7 @@ import InvalidCardError from "../domain/error/InvalidCardError";
 import InvalidStateError from "../domain/error/InvalidStateError";
 import { Players } from "../constants/gameStates";
 import { checkIfCardIsPlayable } from "./gamePlayHelpers";
+import { cloneDeep } from "lodash";
 
 export const checkCardValidity = (card, shouldHaveOwner) => {
   // const face = card.getFace();
@@ -24,25 +25,27 @@ export const checkCardValidity = (card, shouldHaveOwner) => {
 export const validateCardPlayability = (card, humanHand, robotHand, cardInPlay, whosTurn) => {
   checkCardValidity(card, true); // Avoids bad behavior. Played cards should have a face value, suit and an owner
 
-  if (whosTurn !== card.owner) {
+  const referenceCard = cloneDeep(card);
+  referenceCard.suit = referenceCard.originalSuit || referenceCard.suit;
+  if (whosTurn !== referenceCard.owner) {
     throw new InvalidStateError("It isn't your turn!");
   }
 
-  if (!checkIfCardIsPlayable(card, cardInPlay)) {
+  if (!checkIfCardIsPlayable(referenceCard, cardInPlay)) {
     throw new InvalidStateError(
-      `${card.face} of ${card.suit} cannot be played on a ${cardInPlay.face} of ${cardInPlay.suit}`
+      `${referenceCard.face} of ${referenceCard.suit} cannot be played on a ${referenceCard.face} of ${referenceCard.suit}`
     );
   }
 
   const handInQuestion = card.owner === Players.HUMAN ? humanHand : robotHand;
 
   const foundCard = handInQuestion.find(
-    handCard => JSON.stringify(handCard) === JSON.stringify(card)
+    handCard => handCard.face === referenceCard.face && handCard.suit === referenceCard.suit
   );
 
-  // if (!foundCard) {
-  //   throw new InvalidStateError(
-  //     `Tried playing the ${card.face} of ${card.suit} but that isn't in your hand.`
-  //   );
-  // }
+  if (!foundCard) {
+    throw new InvalidStateError(
+      `Tried playing the ${referenceCard.face} of ${referenceCard.suit} but that isn't in your hand.`
+    );
+  }
 };
