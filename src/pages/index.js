@@ -16,6 +16,7 @@ const NUM_CARDS_OPTIONS = Object.freeze([5, 8, 10]);
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  height: 100%;
   height: -webkit-fill-available;
   align-items: center;
   justify-content: center;
