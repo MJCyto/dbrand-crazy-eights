@@ -3,6 +3,8 @@ import { selectDeck, selectPile } from "../../redux/slices/card/selectors";
 import CardElement from "../../shared/CardElement";
 import FaceDownCard from "../../shared/FaceDownCard";
 import styled from "styled-components";
+import { setWhosTurn } from "../../redux/slices/gameState/gameStateSlice";
+import { Players } from "../../constants/gameStates";
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,13 +13,15 @@ const Wrapper = styled.div`
   column-gap: 75px;
 `;
 
-const Pile = props => {
+const Pile = ({ onPickUp }) => {
   const cards = useSelector(selectPile);
+  const whosTurn = useSelector(setWhosTurn);
+
   return (
     <Wrapper>
       <CardElement cardObj={cards[cards.length - 1]} nonSelectable />
 
-      <FaceDownCard />
+      <FaceDownCard onClick={onPickUp} disabled={whosTurn !== Players.HUMAN} />
     </Wrapper>
   );
 };

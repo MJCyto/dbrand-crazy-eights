@@ -12,13 +12,24 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Alert } from "@mui/material";
 import ErrorContext from "../../domain/context/errorContext";
 import SomeoneWonModal from "../../modals/SomeoneWonModal";
-import { clearGame, restartGame } from "../../redux/slices/gameState/gameStateSlice";
+import {
+  clearGame,
+  playCard,
+  restartGame,
+  setWhosTurn,
+} from "../../redux/slices/gameState/gameStateSlice";
 import { useRouter } from "next/router";
-import { GameStates } from "../../constants/gameStates";
+import { GameStates, Players } from "../../constants/gameStates";
 import routes from "../../constants/routes";
 import styled from "styled-components";
 import Colors from "../../constants/colors";
 import GameNotFound from "./GameNotFound";
+import PlayablePickupModal from "../../modals/PlayablePickupModal";
+import EightSelectionModal from "../../modals/EightSelectionModal";
+import { selectCardInPlay, selectDeck, selectHumanHand } from "../../redux/slices/card/selectors";
+import { CardFaces } from "../../constants/cardValues";
+import { checkIfCardIsPlayable } from "../../helpers/gamePlayHelpers";
+import { pickUpCard, replenishPile } from "../../redux/slices/card/cardSlice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,12 +40,21 @@ const Wrapper = styled.div`
 `;
 
 const GameScreen = () => {
+  const errorTimeout = useRef();
+
   const router = useRouter();
   const whosTurn = useSelector(selectWhosTurn);
   const winner = useSelector(selectWinner);
   const gameState = useSelector(selectGameState);
-  const errorTimeout = useRef();
+  const deck = useSelector(selectDeck);
+  const cards = useSelector(selectHumanHand);
+  const cardInPlay = useSelector(selectCardInPlay);
+
   const [gameplayError, setGameplayError] = useState();
+  const [playablePickupModalVisible, setPlayablePickupModalVisible] = useState(false);
+  const [eightSelectModalVisible, setEightSelectModalVisible] = useState(false);
+  const [cardForModal, setCardForModal] = useState();
+  const [waitingForNewCard, setWaitingForNewCard] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -47,6 +67,69 @@ const GameScreen = () => {
     }, 5000);
   };
 
+  const setTurnToRobot = () => {
+    try {
+      dispatch(setWhosTurn(Players.ROBOT));
+    } catch (e) {
+      onError(e);
+    }
+  };
+
+  // Prevents a race condition with redux, since a stale value might be used shortly after dispatching for a pickup
+  useEffect(() => {
+    if (waitingForNewCard) {
+      setWaitingForNewCard(false);
+      const newCard = cards[cards.length - 1];
+      if (checkIfCardIsPlayable(newCard, cardInPlay)) {
+        setCardForModal(newCard);
+        setPlayablePickupModalVisible(true);
+      } else {
+        setTurnToRobot();
+      }
+    }
+  }, [cards]);
+
+  const doPlayCard = card => {
+    try {
+      dispatch(playCard(card));
+    } catch (e) {
+      onError(e);
+    }
+  };
+
+  // Check that pickup is possible, replenish if not. Wait for card to see if playable.
+  const onPickUp = () => {
+    if (deck.length < 1) {
+      try {
+        dispatch(replenishPile());
+      } catch (e) {
+        onError(e);
+      }
+    }
+    try {
+      dispatch(pickUpCard(Players.HUMAN));
+    } catch (e) {
+      onError(e);
+    }
+    setWaitingForNewCard(true);
+  };
+
+  // Check if extra info needed from human, or just play the card.
+  const onPlayCard = card => {
+    if (card.face === CardFaces[8]) {
+      setCardForModal(card);
+      setEightSelectModalVisible(true);
+    } else {
+      doPlayCard(card);
+    }
+  };
+
+  // Human has selected what sit they want and the new card is provided.
+  const on8Chosen = newCard => {
+    closeModals();
+    doPlayCard(newCard);
+  };
+
   const onQuit = () => {
     dispatch(clearGame());
     router.replace("/");
@@ -54,6 +137,12 @@ const GameScreen = () => {
 
   const onRestart = () => {
     dispatch(restartGame());
+  };
+
+  const closeModals = () => {
+    setCardForModal(undefined);
+    setPlayablePickupModalVisible(false);
+    setEightSelectModalVisible(false);
   };
 
   return (
@@ -64,6 +153,23 @@ const GameScreen = () => {
         </Alert>
       )}
       <SomeoneWonModal open={!!winner} winner={winner} onRestart={onRestart} onQuit={onQuit} />
+      <PlayablePickupModal
+        open={playablePickupModalVisible}
+        onConfirm={() => {
+          closeModals();
+          onPlayCard(cardForModal);
+        }}
+        onCancel={() => {
+          closeModals();
+          setTurnToRobot();
+        }}
+        card={cardForModal}
+      />
+      <EightSelectionModal
+        open={eightSelectModalVisible}
+        onSelect={on8Chosen}
+        card={cardForModal}
+      />
       <Wrapper>
         {gameState === GameStates.LOBBY ? (
           <GameNotFound />
@@ -72,10 +178,10 @@ const GameScreen = () => {
             <ErrorContext.Provider value={{ onError, error: gameplayError }}>
               <RobotHand />
               {`It's the ${whosTurn}'s turn.`}
-              <Pile />
+              <Pile onPickUp={onPickUp} />
               <br />
               <br />
-              <HumanHand />
+              <HumanHand onPlayCard={onPlayCard} />
             </ErrorContext.Provider>
           </>
         )}
