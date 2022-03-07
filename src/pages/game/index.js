@@ -28,6 +28,7 @@ import { selectCardInPlay, selectDeck, selectHumanHand } from "../../redux/slice
 import { CardFaces } from "../../constants/cardValues";
 import { checkIfCardIsPlayable } from "../../helpers/gamePlayHelpers";
 import { pickUpCard, replenishPile } from "../../redux/slices/card/cardSlice";
+import FontSizes from "../../constants/fontSizes";
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,6 +36,15 @@ const Wrapper = styled.div`
   justify-content: space-between;
   height: -webkit-fill-available;
   background-color: ${Colors.Jet};
+`;
+
+const TableCenterWrapper = styled.div`
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 25px;
+  font-size: ${FontSizes.H2};
 `;
 
 const GameScreen = () => {
@@ -174,8 +184,10 @@ const GameScreen = () => {
         ) : (
           <>
             <RobotHand />
-            {`It's the ${whosTurn}'s turn.`}
-            <Pile onPickUp={onPickUp} />
+            <TableCenterWrapper>
+              {`It's the ${whosTurn}'s turn.`}
+              <Pile onPickUp={onPickUp} />
+            </TableCenterWrapper>
             <br />
             <br />
             <HumanHand onPlayCard={onPlayCard} />
