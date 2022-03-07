@@ -29,6 +29,7 @@ import { CardFaces } from "../../constants/cardValues";
 import { checkIfCardIsPlayable } from "../../helpers/gamePlayHelpers";
 import { pickUpCard, replenishPile } from "../../redux/slices/card/cardSlice";
 import FontSizes from "../../constants/fontSizes";
+import ErrorAlert from "../../shared/ErrorAlert";
 
 const Wrapper = styled.div`
   display: flex;
@@ -58,7 +59,7 @@ const GameScreen = () => {
   const cards = useSelector(selectHumanHand);
   const cardInPlay = useSelector(selectCardInPlay);
 
-  const [gameplayError, setGameplayError] = useState();
+  const [gameplayError, setGameplayError] = useState(new Error("DINGUS"));
   const [playablePickupModalVisible, setPlayablePickupModalVisible] = useState(false);
   const [eightSelectModalVisible, setEightSelectModalVisible] = useState(false);
   const [cardForModal, setCardForModal] = useState();
@@ -155,11 +156,7 @@ const GameScreen = () => {
 
   return (
     <PageWrapper>
-      {gameplayError && (
-        <Alert variant="outlined" severity="error">
-          {gameplayError.message}
-        </Alert>
-      )}
+      {gameplayError && <ErrorAlert message={gameplayError.message} />}
       <SomeoneWonModal open={!!winner} winner={winner} onRestart={onRestart} onQuit={onQuit} />
       <PlayablePickupModal
         open={playablePickupModalVisible}
