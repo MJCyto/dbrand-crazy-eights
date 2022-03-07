@@ -15,8 +15,6 @@ export const getSubsequentCardsOnTop = (pile, faceToLookFor) => {
   return subsequentCards;
 };
 
-const checkIfCardPlayable = (cardToPick, cardInPlay) => {};
-
 export const isCardASkip = card => {
   return SkipCards.includes(card.face);
 };

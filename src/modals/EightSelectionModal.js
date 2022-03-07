@@ -1,7 +1,6 @@
 import ModalWrapper, { ButtonWrap, ModalMessageWrap, ModalTitleWrap } from "./ModalWrapper";
 import { CardSuits } from "../constants/cardValues";
 import { Button } from "../shared/SharedComponents";
-import styled from "styled-components";
 
 const EightSelectionModal = props => {
   const { open, card, onSelect } = props;

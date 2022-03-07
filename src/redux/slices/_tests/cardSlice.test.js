@@ -1,15 +1,6 @@
-import cardSlice, { replenishPile } from "../card/cardSlice";
-
-describe.skip("cardSlice action tests", () => {
-  describe("playCard works", () => {
-    it("CardElement of same value is playable", () => {});
-    it("CardElement of same suit is playable", () => {});
-    it("Still player's turn when skip is played", () => {});
-    it("An 8 should be always playable", () => {});
-    it("Should fail when it's not the player's turn", () => {});
-    it("Unable to play invalid card", () => {});
-  });
-});
+import cardSlice, { pushCard, replenishPile } from "../card/cardSlice";
+import { CardFaces, CardSuits } from "../../../constants/cardValues";
+import { Players } from "../../../constants/gameStates";
 
 describe("cardSlice reducer tests", () => {
   describe("replenishPile works", () => {
@@ -42,5 +33,44 @@ describe("cardSlice reducer tests", () => {
       done();
     });
   });
-  describe("pushCard works", () => {});
+  describe("pushCard works", () => {
+    it("Can play a card out of the human's hand", () => {
+      // arrange
+      const initialState = {
+        humanHand: [
+          { suit: CardSuits.DIAMONDS, face: CardFaces.K, owner: Players.HUMAN },
+          { suit: CardSuits.SPADES, face: CardFaces.Q, owner: Players.HUMAN },
+        ],
+        playedCards: [{ suit: CardSuits.CLUBS, face: CardFaces[2] }],
+      };
+      // act
+      const endState = cardSlice(
+        initialState,
+        pushCard({ suit: CardSuits.SPADES, face: CardFaces.Q, owner: Players.HUMAN })
+      );
+
+      // assert
+      expect(endState.humanHand.length).toEqual(1);
+      expect(endState.playedCards.length).toEqual(2);
+    });
+    it("Can play a card out of the robot's hand", () => {
+      // arrange
+      const initialState = {
+        robotHand: [
+          { suit: CardSuits.DIAMONDS, face: CardFaces.K, owner: Players.ROBOT },
+          { suit: CardSuits.SPADES, face: CardFaces.Q, owner: Players.ROBOT },
+        ],
+        playedCards: [{ suit: CardSuits.CLUBS, face: CardFaces[2] }],
+      };
+      // act
+      const endState = cardSlice(
+        initialState,
+        pushCard({ suit: CardSuits.SPADES, face: CardFaces.Q, owner: Players.ROBOT })
+      );
+
+      // assert
+      expect(endState.robotHand.length).toEqual(1);
+      expect(endState.playedCards.length).toEqual(2);
+    });
+  });
 });

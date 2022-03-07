@@ -6,6 +6,7 @@ import { saveState } from "../redux/browserStorage";
 import { store } from "../redux/store";
 import { useEffect, useState } from "react";
 import "../public/fonts/style.css";
+import Head from "next/head";
 
 store.subscribe(
   debounce(() => {
@@ -23,6 +24,11 @@ function MyApp({ Component, pageProps, reduxStore }) {
   }, []);
   return (
     <>
+      <Head>
+        <title>DBrand Crazy Eights</title>
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+        <link rel="icon" type="image/png" href="/static/favicon.png" />
+      </Head>
       <Provider store={storeToUse}>
         <Component {...pageProps} />
       </Provider>
