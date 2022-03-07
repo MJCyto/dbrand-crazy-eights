@@ -9,7 +9,6 @@ import {
 import PageWrapper from "../../shared/PageWrapper";
 import RobotHand from "./RobotHand";
 import { useEffect, useRef, useState } from "react";
-import { Alert } from "@mui/material";
 import SomeoneWonModal from "../../modals/SomeoneWonModal";
 import {
   clearGame,
@@ -59,7 +58,7 @@ const GameScreen = () => {
   const cards = useSelector(selectHumanHand);
   const cardInPlay = useSelector(selectCardInPlay);
 
-  const [gameplayError, setGameplayError] = useState(new Error("DINGUS"));
+  const [gameplayError, setGameplayError] = useState();
   const [playablePickupModalVisible, setPlayablePickupModalVisible] = useState(false);
   const [eightSelectModalVisible, setEightSelectModalVisible] = useState(false);
   const [cardForModal, setCardForModal] = useState();
