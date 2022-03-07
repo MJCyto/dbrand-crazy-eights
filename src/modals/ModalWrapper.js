@@ -3,29 +3,48 @@ import Colors from "../constants/colors";
 import styled from "styled-components";
 import FontSizes from "../constants/fontSizes";
 
+const StyledModal = styled(Modal)`
+  margin: auto;
+  outline: none;
+  height: fit-content;
+  width: fit-content;
+  > *:focus-visible {
+    outline: none;
+  }
+`;
+
+const Wrapper = styled.div`
+  background-color: ${Colors.Jet};
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  padding: 20px;
+  width: calc(100vw - 20px);
+`;
+
 export const ModalTitleWrap = styled.div`
   color: ${Colors.DBrandYellow};
   font-size: ${FontSizes.H3};
+  text-align: center;
+  margin-bottom: 20px; ;
 `;
 
 export const ModalMessageWrap = styled.div`
-  color: ${Colors.Jet};
+  color: ${Colors.White};
+  text-align: center;
+  margin-bottom: 30px;
 `;
 
-const ModalWrapper = ({ children, open }) => {
+export const ButtonWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  column-gap: 10px;
+`;
+
+const ModalWrapper = ({ children, open, style }) => {
   return (
-    <Modal open={open}>
-      <div
-        style={{
-          backgroundColor: Colors.White,
-          border: `1px solid ${Colors.Black}`,
-          padding: 20,
-          margin: "auto",
-        }}
-      >
-        {children}
-      </div>
-    </Modal>
+    <StyledModal open={open}>
+      <Wrapper style={style}>{children}</Wrapper>
+    </StyledModal>
   );
 };
 

@@ -33,9 +33,14 @@ export const ButtonBase = styled.button`
   font-size: ${FontSizes.H6};
   border: none;
   border-radius: 3px;
+  transition: 0.1s ease-in-out;
 
   :focus-visible {
     outline: none;
+  }
+
+  :hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
   }
 `;
 
@@ -44,7 +49,9 @@ const PrimaryButton = styled(ButtonBase)`
   color: ${Colors.White};
 `;
 
-const SecondaryButton = styled(ButtonBase)``;
+const SecondaryButton = styled(ButtonBase)`
+  background-color: ${Colors.DBrandYellow};
+`;
 
 const TertiaryButton = styled(ButtonBase)``;
 
