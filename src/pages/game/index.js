@@ -6,11 +6,10 @@ import {
   selectWhosTurn,
   selectWinner,
 } from "../../redux/slices/gameState/selectors";
-import PageWrapper from "../PageWrapper";
+import PageWrapper from "../../shared/PageWrapper";
 import RobotHand from "./RobotHand";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert } from "@mui/material";
-import ErrorContext from "../../domain/context/errorContext";
 import SomeoneWonModal from "../../modals/SomeoneWonModal";
 import {
   clearGame,
@@ -20,7 +19,6 @@ import {
 } from "../../redux/slices/gameState/gameStateSlice";
 import { useRouter } from "next/router";
 import { GameStates, Players } from "../../constants/gameStates";
-import routes from "../../constants/routes";
 import styled from "styled-components";
 import Colors from "../../constants/colors";
 import GameNotFound from "./GameNotFound";
@@ -175,14 +173,12 @@ const GameScreen = () => {
           <GameNotFound />
         ) : (
           <>
-            <ErrorContext.Provider value={{ onError, error: gameplayError }}>
-              <RobotHand />
-              {`It's the ${whosTurn}'s turn.`}
-              <Pile onPickUp={onPickUp} />
-              <br />
-              <br />
-              <HumanHand onPlayCard={onPlayCard} />
-            </ErrorContext.Provider>
+            <RobotHand />
+            {`It's the ${whosTurn}'s turn.`}
+            <Pile onPickUp={onPickUp} />
+            <br />
+            <br />
+            <HumanHand onPlayCard={onPlayCard} />
           </>
         )}
       </Wrapper>

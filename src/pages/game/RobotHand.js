@@ -4,6 +4,22 @@ import { useEffect } from "react";
 import { Players } from "../../constants/gameStates";
 import { selectRobotHand } from "../../redux/slices/card/selectors";
 import { doRobotTurn } from "../../redux/slices/gameState/gameStateSlice";
+import FaceDownCard from "../../shared/FaceDownCard";
+import styled from "styled-components";
+import { Card } from "@mui/material";
+
+const Wrapper = styled.div`
+  width: 70%;
+  display: flex;
+  justify-content: space-evenly;
+  align-self: center;
+`;
+
+const CardWrapper = styled.div`
+  height: 50px;
+  width: 0;
+  position: relative;
+`;
 
 const RobotHand = () => {
   const whosTurn = useSelector(selectWhosTurn);
@@ -18,11 +34,16 @@ const RobotHand = () => {
   }, [whosTurn]);
 
   return (
-    <div>
+    <Wrapper>
       {cards.map((card, i) => (
-        <div key={i}>{`${card.face} of ${card.suit}`}</div>
+        <CardWrapper key={i}>
+          <FaceDownCard
+            key={i}
+            style={{ position: "absolute", bottom: 0, zIndex: 1, marginLeft: -45 }}
+          />
+        </CardWrapper>
       ))}
-    </div>
+    </Wrapper>
   );
 };
 

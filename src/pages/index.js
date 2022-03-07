@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import routes from "../constants/routes";
 import { clearGame, initGame } from "../redux/slices/gameState/gameStateSlice";
-import PageWrapper from "./PageWrapper";
+import PageWrapper from "../shared/PageWrapper";
 import { selectGameState } from "../redux/slices/gameState/selectors";
 import GameFoundModal from "../modals/GameFoundModal";
 import { GameStates } from "../constants/gameStates";

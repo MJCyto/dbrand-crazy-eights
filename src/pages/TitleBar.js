@@ -12,6 +12,8 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   font-size: ${FontSizes.H3};
+  position: relative;
+  z-index: 10;
 `;
 
 const TitleBar = () => {

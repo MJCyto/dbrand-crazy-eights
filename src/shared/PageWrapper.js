@@ -1,4 +1,4 @@
-import TitleBar from "./TitleBar";
+import TitleBar from "../pages/TitleBar";
 import Colors from "../constants/colors";
 import styled from "styled-components";
 
