@@ -6,7 +6,6 @@ import { selectRobotHand } from "../../redux/slices/card/selectors";
 import { doRobotTurn } from "../../redux/slices/gameState/gameStateSlice";
 import FaceDownCard from "../../shared/FaceDownCard";
 import styled from "styled-components";
-import { Card } from "@mui/material";
 
 const Wrapper = styled.div`
   width: 70%;
