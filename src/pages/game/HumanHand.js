@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectCardInPlay, selectDeck, selectHumanHand } from "../../redux/slices/card/selectors";
-import CardElement from "./CardElement";
+import CardElement from "../../shared/CardElement";
 import { useContext, useEffect, useState } from "react";
 import { CardFaces } from "../../constants/cardValues";
 import { Players } from "../../constants/gameStates";

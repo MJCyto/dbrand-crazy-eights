@@ -5,7 +5,7 @@ import styled from "styled-components";
 const InnerWrapper = styled.div`
   background-color: ${Colors.Black};
   color: ${Colors.White};
-  height: calc(100% - 31px);
+  height: calc(100% - 50px);
 `;
 
 const PageWrapper = ({ children }) => {

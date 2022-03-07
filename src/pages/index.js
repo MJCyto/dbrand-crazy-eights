@@ -9,7 +9,7 @@ import GameFoundModal from "../modals/GameFoundModal";
 import { GameStates } from "../constants/gameStates";
 import FontSizes from "../constants/fontSizes";
 import styled from "styled-components";
-import { Button, CardAnimation } from "../SharedComponents";
+import { NumCardsButton, CardAnimation } from "../shared/SharedComponents";
 
 const NUM_CARDS_OPTIONS = Object.freeze([5, 8, 10]);
 
@@ -22,6 +22,8 @@ const Wrapper = styled.div`
   row-gap: 20px;
   width: fit-content;
   margin: 0 auto;
+  max-width: calc(100vw - 50px);
+  text-align: center;
 `;
 
 const TextWrapper = styled.div`
@@ -76,9 +78,9 @@ const Home = () => {
         <TextWrapper>How many cards should we begin with?</TextWrapper>
         <OptionsWrapper>
           {NUM_CARDS_OPTIONS.map(option => (
-            <Button key={option} onClick={() => beginGame(option)}>
+            <NumCardsButton key={option} onClick={() => beginGame(option)}>
               {option}
-            </Button>
+            </NumCardsButton>
           ))}
         </OptionsWrapper>
       </Wrapper>
