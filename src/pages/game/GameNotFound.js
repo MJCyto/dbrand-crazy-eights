@@ -18,7 +18,7 @@ const Message = styled.div`
   margin: 10px 0 20px;
 `;
 
-const GameNotFound = props => {
+const GameNotFound = () => {
   const router = useRouter();
   return (
     <Wrapper>

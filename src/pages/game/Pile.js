@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { selectDeck, selectPile } from "../../redux/slices/card/selectors";
+import { selectPile } from "../../redux/slices/card/selectors";
 import CardElement from "../../shared/CardElement";
 import FaceDownCard from "../../shared/FaceDownCard";
 import styled from "styled-components";
