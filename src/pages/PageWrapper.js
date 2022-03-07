@@ -1,10 +1,18 @@
 import TitleBar from "./TitleBar";
+import Colors from "../constants/colors";
+import styled from "styled-components";
+
+const InnerWrapper = styled.div`
+  background-color: ${Colors.Black};
+  color: ${Colors.White};
+  height: calc(100% - 31px);
+`;
 
 const PageWrapper = ({ children }) => {
   return (
     <div style={{ height: "100vh" }}>
       <TitleBar />
-      <div style={{ padding: "0 30px", height: "calc(100% - 31px)" }}>{children}</div>
+      <InnerWrapper>{children}</InnerWrapper>
     </div>
   );
 };

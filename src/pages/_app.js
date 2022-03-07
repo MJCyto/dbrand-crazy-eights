@@ -12,6 +12,7 @@ store.subscribe(
     saveState(store.getState());
   }, 800)
 );
+
 function MyApp({ Component, pageProps, reduxStore }) {
   const [storeToUse, setStoreToUse] = useState(reduxStore);
 

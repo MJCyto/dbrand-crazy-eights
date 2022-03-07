@@ -7,9 +7,36 @@ import PageWrapper from "./PageWrapper";
 import { selectGameState } from "../redux/slices/gameState/selectors";
 import GameFoundModal from "../modals/GameFoundModal";
 import { GameStates } from "../constants/gameStates";
+import FontSizes from "../constants/fontSizes";
+import styled from "styled-components";
+import { Button, CardAnimation } from "../SharedComponents";
+
+const NUM_CARDS_OPTIONS = Object.freeze([5, 8, 10]);
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: -webkit-fill-available;
+  align-items: center;
+  justify-content: center;
+  row-gap: 20px;
+  width: fit-content;
+  margin: 0 auto;
+`;
+
+const TextWrapper = styled.div`
+  font-size: ${FontSizes.H2};
+`;
+
+const OptionsWrapper = styled.div`
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 15px;
+  height: 65px;
+`;
 
 const Home = () => {
-  const [numCards, setNumCards] = useState();
   const [inputValidationError, setInputValidationError] = useState();
   const [gameStarting, setGameStarting] = useState(false);
 
@@ -18,7 +45,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const beginGame = () => {
+  const beginGame = numCards => {
     setGameStarting(true);
     try {
       dispatch(initGame(numCards));
@@ -44,9 +71,17 @@ const Home = () => {
         resumeGame={resumeGame}
         cancelGame={cancelGame}
       />
-      <br />
-      How many cards should we begin with? <input onChange={e => setNumCards(e.target.value)} />
-      <button onClick={beginGame}>Begin</button>
+      <Wrapper>
+        <CardAnimation />
+        <TextWrapper>How many cards should we begin with?</TextWrapper>
+        <OptionsWrapper>
+          {NUM_CARDS_OPTIONS.map(option => (
+            <Button key={option} onClick={() => beginGame(option)}>
+              {option}
+            </Button>
+          ))}
+        </OptionsWrapper>
+      </Wrapper>
     </PageWrapper>
   );
 };
