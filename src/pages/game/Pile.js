@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { selectPile } from "../../redux/slices/card/selectors";
+import { selectCardInPlay } from "../../redux/slices/card/selectors";
 import CardElement from "../../shared/CardElement";
 import FaceDownCard from "../../shared/FaceDownCard";
 import styled from "styled-components";
@@ -14,14 +14,24 @@ const Wrapper = styled.div`
 `;
 
 const Pile = ({ onPickUp }) => {
-  const cards = useSelector(selectPile);
+  const cardInPlay = useSelector(selectCardInPlay);
   const whosTurn = useSelector(setWhosTurn);
 
   return (
     <Wrapper>
-      <CardElement cardObj={cards[cards.length - 1]} nonSelectable />
+      <CardElement
+        cardObj={cardInPlay}
+        nonSelectable
+        tabIndex={-1}
+        role="img"
+        alt={`The card in play. It is the ${cardInPlay.face} of ${cardInPlay.suit}`}
+      />
 
-      <FaceDownCard onClick={onPickUp} disabled={whosTurn !== Players.HUMAN} />
+      <FaceDownCard
+        onClick={() => whosTurn === Players.HUMAN && onPickUp()}
+        aria-disabled={whosTurn !== Players.HUMAN}
+        aria-label={`Pickup pile`}
+      />
     </Wrapper>
   );
 };

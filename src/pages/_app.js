@@ -25,8 +25,11 @@ function MyApp({ Component, pageProps, reduxStore }) {
   return (
     <>
       <Head>
-        <lang />
         <title>DBrand Crazy Eights</title>
+        <meta
+          name="description"
+          content="A game of crazy eights made for DBrand. Created using Next.js and Redux Toolkit."
+        />
         <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
         <link rel="icon" type="image/png" href="/static/favicon.png" />
       </Head>

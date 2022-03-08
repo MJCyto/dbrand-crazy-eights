@@ -12,16 +12,25 @@ const Wrapper = styled.button`
   background-color: ${Colors.Black};
   color: ${Colors.White};
   position: relative;
-  border: 1px solid ${Colors.White};
   font-family: ${Fonts.Default};
   font-size: ${FontSizes.H3};
   height: 143px;
   width: 90px;
   min-width: 90px;
   border-radius: 10px;
+
+  border: 2px solid ${Colors.White};
+  transition: 0.1s ease-in-out;
+
   :focus-visible {
+    border-color: ${Colors.DBrandYellow};
     outline: none;
   }
+
+  :hover {
+    border-color: ${Colors.DBrandYellow};
+  }
+
   :disabled {
     border-color: ${Colors.Black};
     opacity: 50%;
@@ -39,7 +48,8 @@ const BottomRightSuit = styled.div`
   right: 7px;
 `;
 
-const CardElement = ({ cardObj = {}, nonSelectable, playCard }) => {
+const CardElement = props => {
+  const { cardObj = {}, nonSelectable, playCard } = props;
   const cardInPlay = useSelector(selectCardInPlay);
   const { face, suit } = cardObj;
 
@@ -67,12 +77,14 @@ const CardElement = ({ cardObj = {}, nonSelectable, playCard }) => {
         <Wrapper
           disabled={!checkIfCardIsPlayable(cardObj, cardInPlay)}
           onClick={() => !nonSelectable && playCard(cardObj)}
+          aria-label={`${cardObj.face} of ${cardObj.suit}`}
+          {...props}
         >
           {`${face}`}
-          <TopLeftSuit>
+          <TopLeftSuit aria-hidden>
             <Icon />
           </TopLeftSuit>
-          <BottomRightSuit>
+          <BottomRightSuit aria-hidden>
             <Icon />
           </BottomRightSuit>
         </Wrapper>

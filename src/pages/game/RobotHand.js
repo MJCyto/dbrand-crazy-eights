@@ -33,12 +33,15 @@ const RobotHand = () => {
   }, [whosTurn]);
 
   return (
-    <Wrapper>
+    <Wrapper role="img" alt={`The robot's hand. It has ${cards.length} cards.`}>
       {cards.map((card, i) => (
         <CardWrapper key={i}>
           <FaceDownCard
             key={i}
             style={{ position: "absolute", bottom: 0, zIndex: 1, marginLeft: -45 }}
+            tabIndex={-1}
+            nonSelectable
+            aria-hidden
           />
         </CardWrapper>
       ))}

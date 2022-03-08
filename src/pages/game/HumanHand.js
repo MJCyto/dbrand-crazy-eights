@@ -20,7 +20,7 @@ const HumanHand = props => {
   const cards = useSelector(selectHumanHand);
 
   return (
-    <Wrapper>
+    <Wrapper aria-label="Your cards">
       {cards.map((card, i) => (
         <CardElement cardObj={card} key={i} playCard={onPlayCard} />
       ))}
