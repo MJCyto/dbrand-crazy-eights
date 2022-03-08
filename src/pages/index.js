@@ -79,7 +79,11 @@ const Home = () => {
         <TextWrapper>How many cards should we begin with?</TextWrapper>
         <OptionsWrapper>
           {NUM_CARDS_OPTIONS.map(option => (
-            <NumCardsButton key={option} onClick={() => beginGame(option)}>
+            <NumCardsButton
+              key={option}
+              onClick={() => beginGame(option)}
+              aria-label={`Start with ${option} cards`}
+            >
               {option}
             </NumCardsButton>
           ))}

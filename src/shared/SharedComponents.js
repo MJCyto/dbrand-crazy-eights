@@ -17,9 +17,7 @@ export const NumCardsButton = styled.button`
   }
 `;
 
-export const CardAnimation = styled.div`
-    return <div/>
-`;
+export const CardAnimation = styled.div``;
 
 export const ButtonVariants = Object.freeze({
   PRIMARY: "PRIMARY",

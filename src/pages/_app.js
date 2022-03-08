@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps, reduxStore }) {
   return (
     <>
       <Head>
+        <lang />
         <title>DBrand Crazy Eights</title>
         <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
         <link rel="icon" type="image/png" href="/static/favicon.png" />
