@@ -183,7 +183,7 @@ const GameScreen = () => {
             <RobotHand />
             <TableCenterWrapper>
               {`It's the ${whosTurn}'s turn.`}
-              <Pile onPickUp={onPickUp} />
+              <Pile onPickUp={() => whosTurn === Players.HUMAN && onPickUp()} />
             </TableCenterWrapper>
             <br />
             <br />

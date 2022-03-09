@@ -26,9 +26,8 @@ const Pile = ({ onPickUp }) => {
         role="img"
         alt={`The card in play. It is the ${cardInPlay.face} of ${cardInPlay.suit}`}
       />
-
       <FaceDownCard
-        onClick={() => whosTurn === Players.HUMAN && onPickUp()}
+        onClick={onPickUp}
         aria-disabled={whosTurn !== Players.HUMAN}
         aria-label={`Pickup pile`}
       />
